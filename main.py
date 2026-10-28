@@ -10,9 +10,9 @@ from procesamiento import (
 
 
 def exportar_reporte(
-    sesiones: list[dict],
-    ruta_salida: str = "reporte_gamesec.txt",
-    conclusiones: list[str] = None) -> None:
+        sesiones: list[dict],
+        ruta_salida: str = "reporte_gamesec.txt",
+        conclusiones: list[str] = None) -> None:
     """Genera un archivo de texto consolidando todos los análisis realizados.
 
     Si no se proporcionan 'conclusiones', se solicitan interactiva por consola.
@@ -20,17 +20,16 @@ def exportar_reporte(
     if not sesiones:
         raise ValueError("No hay datos cargados para exportar el reporte.")
 
-    
     if conclusiones is None or len(conclusiones) < 3:
-            print("\n--- INGRESO DE CONCLUSIONES TÉCNICAS (OBLIGATORIO) ---")
-            conclusiones = []
-            for i in range(1, 4):
-                texto = input(f"Ingrese la conclusión #{i}: ").strip()
-                # Validación simple para que no quede vacía
-                while not texto:
-                    texto = input(f"La conclusión #{i} no puede estar vacía. Reintente: ").strip()
-                conclusiones.append(texto)
-
+        print("\n--- INGRESO DE CONCLUSIONES TÉCNICAS (OBLIGATORIO) ---")
+        conclusiones = []
+        for i in range(1, 4):
+            texto = input(f"Ingrese la conclusión #{i}: ").strip()
+            # Validación simple para que no quede vacía
+            while not texto:
+                texto = input(
+                    f"La conclusión #{i} no puede estar vacía. Reintente: ").strip()
+            conclusiones.append(texto)
 
     globales = calcular_estadisticas_globales(sesiones)
     por_servidor = analizar_por_servidor(sesiones)
@@ -40,11 +39,13 @@ def exportar_reporte(
         archivo.write("============================================\n")
         archivo.write("REPORTE DE AUDITORÍA Y TELEMETRÍA — GAMESEC\n")
         archivo.write("============================================\n")
-        archivo.write("Fecha de generación: " + date.today().strftime("%d-%m-%Y") + "\n\n")
+        archivo.write("Fecha de generación: " +
+                      date.today().strftime("%d-%m-%Y") + "\n\n")
 
         # 1. Estadísticas Globales
         archivo.write("[1] RESUMEN GLOBAL OPERATIVO\n")
-        archivo.write("----------------------------------------------------------------------\n")
+        archivo.write(
+            "----------------------------------------------------------------------\n")
         archivo.write(
             f"Total de sesiones procesadas: {globales['total_sesiones']}\n"
         )
@@ -60,7 +61,8 @@ def exportar_reporte(
 
         # 2. Rendimiento por Servidor
         archivo.write("[2] RENDIMIENTO REGIONAL POR SERVIDOR\n")
-        archivo.write("----------------------------------------------------------------------\n")
+        archivo.write(
+            "----------------------------------------------------------------------\n")
         archivo.write(
             f"{'Servidor':<18} | {'Sesiones':<8} | {'Ping Promedio':<13} | {'FPS Promedio':<12}\n"
         )
@@ -73,25 +75,30 @@ def exportar_reporte(
             # Se aplica el alineado a la izquierda (<) manteniendo el ancho exacto de cada columna
             archivo.write(
                 f"{srv:<18} | {datos['cantidad']:<8} | {ping_str:<13} | {fps_str:<12}\n"
-        )
+            )
         archivo.write("\n")
 
         # 3. Auditoría de Seguridad
         archivo.write("[3] AUDITORÍA DE SEGURIDAD E INCIDENTES\n")
-        archivo.write("----------------------------------------------------------------------\n")
+        archivo.write(
+            "----------------------------------------------------------------------\n")
         # 3.1. Obtenemos el total de sesiones
         total_sesiones = globales["total_sesiones"]
 
         # 3.2. Calculamos los porcentajes de cada estado
         pct_normal = round((frecuencias["Normal"] / total_sesiones) * 100, 2)
-        pct_sospechoso = round((frecuencias["Sospechoso"] / total_sesiones) * 100, 2)
+        pct_sospechoso = round(
+            (frecuencias["Sospechoso"] / total_sesiones) * 100, 2)
         pct_critico = round((frecuencias["Crítico"] / total_sesiones) * 100, 2)
 
         # 3.3. Escribimos las líneas en el archivo de texto
         archivo.write("Distribución de estados de seguridad:\n")
-        archivo.write(f"  • Normales:    {frecuencias['Normal']:>3} sesiones ({pct_normal:>6.2f}%)\n")
-        archivo.write(f"  • Sospechosos: {frecuencias['Sospechoso']:>3} sesiones ({pct_sospechoso:>6.2f}%)\n")
-        archivo.write(f"  • Críticos:    {frecuencias['Crítico']:>3} sesiones ({pct_critico:>6.2f}%)\n\n")
+        archivo.write(
+            f"  • Normales:    {frecuencias['Normal']:>3} sesiones ({pct_normal:>6.2f}%)\n")
+        archivo.write(
+            f"  • Sospechosos: {frecuencias['Sospechoso']:>3} sesiones ({pct_sospechoso:>6.2f}%)\n")
+        archivo.write(
+            f"  • Críticos:    {frecuencias['Crítico']:>3} sesiones ({pct_critico:>6.2f}%)\n\n")
 
         archivo.write("Detalle de Sesiones Críticas Detectadas:\n")
         for c in criticos:
@@ -102,13 +109,16 @@ def exportar_reporte(
         archivo.write("\n")
 
         archivo.write("[4] CONCLUSIONES TÉCNICAS DEL EQUIPO\n")
-        archivo.write("----------------------------------------------------------------------\n")
+        archivo.write(
+            "----------------------------------------------------------------------\n")
         archivo.write(f"1. {conclusiones[0]}\n")
         archivo.write(f"2. {conclusiones[1]}\n")
         archivo.write(f"3. {conclusiones[2]}\n")
-        archivo.write("======================================================================\n")
+        archivo.write(
+            "======================================================================\n")
         archivo.write("                    FIN DEL REPORTE GAMESEC\n")
-        archivo.write("======================================================================\n")
+        archivo.write(
+            "======================================================================\n")
 
     print(f"\n[+] Reporte exportado exitosamente a '{ruta_salida}'")
 
@@ -128,7 +138,7 @@ def mostrar_menu():
 
 def main():
     sesiones = []
-    ruta_defecto = "gamesec_logs.csv"
+    ruta_defecto = "GameSec/gamesec_logs.csv"
 
     while True:
         mostrar_menu()
